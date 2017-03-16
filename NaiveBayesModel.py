@@ -62,7 +62,7 @@ BOWs = np.array(WordsToBOW(Words))
 ndata_train = int(0.90*ndata)
 ndata_test = ndata - ndata_train
 BOWs_train, sentiments_train = BOWs[:ndata_train], sentiments[:ndata_train]
-BOWs_test, sentiments_test = BOWs[:ndata_test], sentiments[:ndata_test]
+BOWs_test, sentiments_test = BOWs[-ndata_test:], sentiments[-ndata_test:]
 print "DONE"
 
 # MODEL TRAINING
