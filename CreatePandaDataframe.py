@@ -1,5 +1,6 @@
 import glob
 import pandas as pd
+import numpy as np
 
 # PANDA DataFrame creation
 #   output : creation of dataframe.pkl file
@@ -37,6 +38,7 @@ print "DONE"
 print "Creating Panda DataFrame ..."
 NBreviews = len(DFdict["review"])
 dataframe = pd.DataFrame(DFdict, index = range(0, NBreviews))
+dataframe = dataframe.reindex(np.random.permutation(dataframe.index))
 print "DONE"
 
 print "Creating pkl file ..."

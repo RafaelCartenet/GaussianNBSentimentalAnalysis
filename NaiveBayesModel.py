@@ -38,32 +38,53 @@ def WordsToBOW(words):
     BOWs = vectorizer.fit_transform(words)
     return BOWs.toarray()
 
+def resultats(pred, real):
+    TP = ((pred == "pos") & (real == "pos")).sum()
+    FP = ((pred == "pos") & (real == "neg")).sum()
+    FN = ((pred == "neg") & (real == "pos")).sum()
+    TN = ((pred == "neg") & (real == "neg")).sum()
+    recall = 100 * (TP / (float(TP) + FN))
+    precision = 100 * (TP / (float(TP) + FP))
+    F1score = 2*precision*recall / (precision + recall)
+    return recall, precision, F1score
+
 # DATA LOADING
 print "Loading Dataframe ..."
 datapath = "data/dataframe.pkl"
 reviews, sentiments = data_loading(datapath)
+ndata = reviews.size
 print "DONE"
 
 # DATA PRE-PROCESSING
 print "Data Pre-Processing ..."
 Words = ReviewsToWords(reviews)
 BOWs = np.array(WordsToBOW(Words))
+ndata_train = int(0.90*ndata)
+ndata_test = ndata - ndata_train
+BOWs_train, sentiments_train = BOWs[:ndata_train], sentiments[:ndata_train]
+BOWs_test, sentiments_test = BOWs[:ndata_test], sentiments[:ndata_test]
 print "DONE"
 
 # MODEL TRAINING
 print "Model Fitting ..."
 model = GaussianNB()
-model.fit(BOWs, sentiments)
+model.fit(BOWs_train, sentiments_train)
 print "DONE"
+print
 
 # PREDICTIONS
-print "Predictions ..."
-y_pred = model.predict(BOWs)
-N = len(y_pred)
-print "DONE"
+print "Predictions on Train dataset :"
+y_pred = model.predict(BOWs_train)
+recall, precision, F1score = resultats(y_pred, sentiments_train)
+print "Recall    : %.3f" % recall, "%"
+print "Precision : %.3f" % precision, "%"
+print "F1score   : %.3f" % F1score, "%"
+print
 
-# RESULTS
-nbfails = (y_pred != sentiments).sum()
-accuracy = 100*(1. - float(nbfails)/N)
-print "Nb Fails : ", nbfails
-print "Accuracy : %.2f" % accuracy, "%"
+print "Predictions on Test dataset :"
+y_pred = model.predict(BOWs_test)
+recall, precision, F1score = resultats(y_pred, sentiments_test)
+print "Recall    : %.3f" % recall, "%"
+print "Precision : %.3f" % precision, "%"
+print "F1score   : %.3f" % F1score, "%"
+print
