@@ -34,11 +34,11 @@ def WordsToBOW(words):
                                  tokenizer = None,    \
                                  preprocessor = None, \
                                  stop_words = None,   \
-                                 max_features = 5000)
+                                 max_features = 3000)
     BOWs = vectorizer.fit_transform(words)
     return BOWs.toarray()
 
-def resultats(pred, real):
+def results(pred, real):
     TP = ((pred == "pos") & (real == "pos")).sum()
     FP = ((pred == "pos") & (real == "neg")).sum()
     FN = ((pred == "neg") & (real == "pos")).sum()
