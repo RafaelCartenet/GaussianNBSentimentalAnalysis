@@ -1,14 +1,17 @@
 import pandas as pd
 import numpy as np
+
+import re
+
 from bs4 import BeautifulSoup as bs
 from nltk.corpus import stopwords
-import re
+
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import classification_report
 from sklearn.naive_bayes import GaussianNB
 from sklearn.naive_bayes import MultinomialNB
 
-# Naive Bayes Model for Sentimental Analysis
+# Sentiment Analysis
 
 # FUNCTIONS
 def data_loading(filename):
